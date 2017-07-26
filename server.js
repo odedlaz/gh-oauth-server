@@ -2,6 +2,7 @@ const app = require('express')();
 const request = require('request');
 const bodyParser = require('body-parser');
 const upload = require('multer')();
+const get_ip = require('ipware')().get_ip;
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -26,6 +27,7 @@ function req_params(req) {
 };
 
 app.post('*', upload.array(), (req, res) => {
+  console.log(`got a request from: "${get_ip(req).clientIp}"`);
   request.post(req_params(req), (error, r, body) => {
     if (!error) {
       res.send(body);
