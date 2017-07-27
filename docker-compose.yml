@@ -1,4 +1,8 @@
 gh-oauth-server:
   build: .
+  environment:
+    - GH_CLIENT_ID=oauth_app_client_id
+    - GH_CLIENT_SECRET=oauth_app_client_secret
+
   ports:
    - 3000:3000

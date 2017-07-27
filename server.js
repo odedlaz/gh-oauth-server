@@ -15,10 +15,14 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
-function req_params(req) {
+function get_token_options(req) {
   return {
     url : 'https://github.com/login/oauth/access_token',
-    form : req.body,
+    form : {
+      code : req.body.code,
+      client_id : process.env.GH_CLIENT_ID,
+      client_secret : process.env.GH_CLIENT_SECRET
+    },
     headers : {
       'Accept' : 'application/json',
       'User-Agent' : 'gh-oauth-server',
@@ -28,7 +32,7 @@ function req_params(req) {
 
 app.post('*', upload.array(), (req, res) => {
   console.log(`got a request from: "${get_ip(req).clientIp}"`);
-  request.post(req_params(req), (error, r, body) => {
+  request.post(get_token_options(req), (error, r, body) => {
     if (!error) {
       res.send(body);
     } else {
